@@ -15,6 +15,7 @@ namespace FinalProject3
         {
             //Enter directory or use current directory
             Console.WriteLine("Please enter desired directory or type 'dir' to use current directory");
+            ConsoleKeyInfo keyinfo;
             string filepath = Console.ReadLine();
             if (filepath != null)
             {
@@ -41,7 +42,7 @@ namespace FinalProject3
             var filelist = Directory.GetFiles(dir);
             Console.WriteLine(filecount.Length + " files found");
 
-            //Finding duplicate files
+            //Finding duplicate files from hash values
             List<Duplicate> details = new List<Duplicate>();
             List<string> delete = new List<string>();
             foreach(var item in filelist)
@@ -65,6 +66,30 @@ namespace FinalProject3
             delete.AddRange(DuplicateList.SelectMany(f => f.Files.Skip(1)).ToList());
             Console.WriteLine("Total files - {0}", delete.Count);
 
+
+            //Delete duplicate files
+            if(delete.Count > 0)
+            {
+                Console.WriteLine("Press D to delete all duplicate files or press Q to quit\n");
+                do
+                {
+                    keyinfo = Console.ReadKey();
+                    if (keyinfo.Key == ConsoleKey.D)
+                    {
+                        Console.WriteLine("\nDeleting duplicate files...");
+                        delete.ForEach(File.Delete);
+                        Console.WriteLine("Duplicate files successfully deleted!");
+                    }
+                    Console.WriteLine("Press Q to quit\n");
+
+                }
+                while (keyinfo.Key != ConsoleKey.Q);
+            }
+            else
+            {
+                Console.WriteLine("No duplicate files to be deleted");
+                Console.ReadLine();
+            }
         }
     }
 }
